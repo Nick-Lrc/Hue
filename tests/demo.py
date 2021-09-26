@@ -53,7 +53,7 @@ if __name__ == '__main__':
                   .flush()
                   .text(large_block('normal'))
                   .bold(large_block('bold')).reset()
-                  .underline(large_block('underline'))
+                  .underline(large_block('underline')).reset()
                   .reversed(large_block('reversed'))
                   .flush()
                   .err(large_block('FAIL'))

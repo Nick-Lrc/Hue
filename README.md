@@ -28,7 +28,7 @@
   - Underline
   - Reversed
 
-![demo](demo.png)
+![demo](https://raw.githubusercontent.com/Nick-Lrc/colorant/main/demo.png)
 
 ## Reference
 
