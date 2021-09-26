@@ -1,8 +1,8 @@
-# Hue
+# Colorant
 
 ## Intro
 
-- A simple example of colored text in console.
+- Sets text colors and effects in console.
 
 ## Features
 
@@ -27,8 +27,6 @@
   - Bold
   - Underline
   - Reversed
-
-## Demo
 
 ![demo](demo.png)
 

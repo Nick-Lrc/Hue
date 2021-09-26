@@ -22,7 +22,7 @@ def csi_seq(sgr: int) -> str:
     return f'{CSI}{sgr}{FIN}'
 
 
-class Hue:
+class Colorant:
     """Adds colors and effects to texts in console."""
 
     # Resets all colors and effects
@@ -40,13 +40,24 @@ class Hue:
         self._buf.pop()
         return text
 
-    def flush(self):
-        """Flush escape sequences and texts from buffer to console."""
-        print(self.reset()._join())
-        self._buf.clear()
-        self.reset()
+    def flush(self, end: str = '\n') -> Colorant:
+        """Flush escape sequences and texts from buffer to console.
 
-    def err(self, text: str) -> Hue:
+        Parameters
+        ----------
+        end: str, default: '\n'
+            Ending character.
+        
+        Returns
+        -------
+        Colorant
+            Current instance.
+        """
+        print(self.reset()._join(), end=end)
+        self._buf.clear()
+        return self.reset()
+
+    def err(self, text: str) -> Colorant:
         """Theme for error messages.
 
         Parameters
@@ -56,27 +67,12 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
-        return self.reset().bg_lt_red().lt_white(text).reset()
-    
-    def info(self, text: str) -> Hue:
-        """Theme for info messages.
+        return self.bg_lt_red().lt_white(text)
 
-        Parameters
-        ----------
-        text: str
-            Raw text.
-
-        Returns
-        -------
-        Hue
-            Current instance.
-        """
-        return self.reset().bg_lt_blue().lt_white(text).reset()
-
-    def ok(self, text: str) -> Hue:
+    def ok(self, text: str) -> Colorant:
         """Theme for okay messages.
 
         Parameters
@@ -86,12 +82,12 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
-        return self.reset().bg_lt_green().black(text).reset()
+        return self.bg_lt_green().black(text)
 
-    def warn(self, text: str) -> Hue:
+    def warn(self, text: str) -> Colorant:
         """Theme for warning messages.
 
         Parameters
@@ -101,12 +97,27 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
-        return self.reset().bg_lt_yellow().black(text).reset()
+        return self.bg_lt_yellow().black(text)
+
+    def info(self, text: str) -> Colorant:
+        """Theme for info messages.
+
+        Parameters
+        ----------
+        text: str
+            Raw text.
+
+        Returns
+        -------
+        Colorant
+            Current instance.
+        """
+        return self.bg_lt_blue().lt_white(text)
     
-    def text(self, text: str) -> Hue:
+    def text(self, text: str) -> Colorant:
         """Adds text to buffer.
 
         Parameters
@@ -116,22 +127,22 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(text)
 
-    def reset(self) -> Hue:
+    def reset(self) -> Colorant:
         """Resets all colors and effects.
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
-        return self._add(Hue.RESET)
+        return self._add(Colorant.RESET)
 
-    def default(self, text: str = None) -> Hue:
+    def default(self, text: str = None) -> Colorant:
         """Resets the foreground color.
 
         Parameters
@@ -141,13 +152,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Foreground.DEFAULT, text)
 
-    def black(self, text: str = None) -> Hue:
-        """Resets the foreground color to black.
+    def black(self, text: str = None) -> Colorant:
+        """Sets the foreground color to black.
 
         Parameters
         ----------
@@ -156,13 +167,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Foreground.BLACK, text)
 
-    def red(self, text: str = None) -> Hue:
-        """Resets the foreground color to red.
+    def red(self, text: str = None) -> Colorant:
+        """Sets the foreground color to red.
 
         Parameters
         ----------
@@ -171,13 +182,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Foreground.RED, text)
 
-    def green(self, text: str = None) -> Hue:
-        """Resets the foreground color to green.
+    def green(self, text: str = None) -> Colorant:
+        """Sets the foreground color to green.
 
         Parameters
         ----------
@@ -186,13 +197,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Foreground.GREEN, text)
 
-    def yellow(self, text: str = None) -> Hue:
-        """Resets the foreground color to yellow.
+    def yellow(self, text: str = None) -> Colorant:
+        """Sets the foreground color to yellow.
 
         Parameters
         ----------
@@ -201,13 +212,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Foreground.YELLOW, text)
 
-    def blue(self, text: str = None) -> Hue:
-        """Resets the foreground color to blue.
+    def blue(self, text: str = None) -> Colorant:
+        """Sets the foreground color to blue.
 
         Parameters
         ----------
@@ -216,13 +227,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Foreground.BLUE, text)
 
-    def magenta(self, text: str = None) -> Hue:
-        """Resets the foreground color to magenta.
+    def magenta(self, text: str = None) -> Colorant:
+        """Sets the foreground color to magenta.
 
         Parameters
         ----------
@@ -231,13 +242,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Foreground.MAGENTA, text)
 
-    def cyan(self, text: str = None) -> Hue:
-        """Resets the foreground color to cyan.
+    def cyan(self, text: str = None) -> Colorant:
+        """Sets the foreground color to cyan.
 
         Parameters
         ----------
@@ -246,13 +257,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Foreground.CYAN, text)
 
-    def white(self, text: str = None) -> Hue:
-        """Resets the foreground color to white.
+    def white(self, text: str = None) -> Colorant:
+        """Sets the foreground color to white.
 
         Parameters
         ----------
@@ -261,13 +272,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Foreground.WHITE, text)
 
-    def lt_black(self, text: str = None) -> Hue:
-        """Resets the foreground color to light black.
+    def lt_black(self, text: str = None) -> Colorant:
+        """Sets the foreground color to light black.
 
         Parameters
         ----------
@@ -276,13 +287,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Foreground.LT_BLACK, text)
 
-    def lt_red(self, text: str = None) -> Hue:
-        """Resets the foreground color to light red.
+    def lt_red(self, text: str = None) -> Colorant:
+        """Sets the foreground color to light red.
 
         Parameters
         ----------
@@ -291,13 +302,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Foreground.LT_RED, text)
 
-    def lt_green(self, text: str = None) -> Hue:
-        """Resets the foreground color to light green.
+    def lt_green(self, text: str = None) -> Colorant:
+        """Sets the foreground color to light green.
 
         Parameters
         ----------
@@ -306,13 +317,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Foreground.LT_GREEN, text)
 
-    def lt_yellow(self, text: str = None) -> Hue:
-        """Resets the foreground color to light yellow.
+    def lt_yellow(self, text: str = None) -> Colorant:
+        """Sets the foreground color to light yellow.
 
         Parameters
         ----------
@@ -321,13 +332,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Foreground.LT_YELLOW, text)
 
-    def lt_blue(self, text: str = None) -> Hue:
-        """Resets the foreground color to light blue.
+    def lt_blue(self, text: str = None) -> Colorant:
+        """Sets the foreground color to light blue.
 
         Parameters
         ----------
@@ -336,13 +347,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Foreground.LT_BLUE, text)
 
-    def lt_magenta(self, text: str = None) -> Hue:
-        """Resets the foreground color to light magenta.
+    def lt_magenta(self, text: str = None) -> Colorant:
+        """Sets the foreground color to light magenta.
 
         Parameters
         ----------
@@ -351,13 +362,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Foreground.LT_MAGENTA, text)
 
-    def lt_cyan(self, text: str = None) -> Hue:
-        """Resets the foreground color to light cyan.
+    def lt_cyan(self, text: str = None) -> Colorant:
+        """Sets the foreground color to light cyan.
 
         Parameters
         ----------
@@ -366,13 +377,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Foreground.LT_CYAN, text)
 
-    def lt_white(self, text: str = None) -> Hue:
-        """Resets the foreground color to light white.
+    def lt_white(self, text: str = None) -> Colorant:
+        """Sets the foreground color to light white.
 
         Parameters
         ----------
@@ -381,12 +392,12 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Foreground.LT_WHITE, text)
 
-    def bg_default(self, text: str = None) -> Hue:
+    def bg_default(self, text: str = None) -> Colorant:
         """Resets the background color.
 
         Parameters
@@ -396,13 +407,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Background.DEFAULT, text)
 
-    def bg_black(self, text: str = None) -> Hue:
-        """Resets the background color to black.
+    def bg_black(self, text: str = None) -> Colorant:
+        """Sets the background color to black.
 
         Parameters
         ----------
@@ -411,13 +422,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Background.BLACK, text)
 
-    def bg_red(self, text: str = None) -> Hue:
-        """Resets the background color to red.
+    def bg_red(self, text: str = None) -> Colorant:
+        """Sets the background color to red.
 
         Parameters
         ----------
@@ -426,13 +437,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Background.RED, text)
 
-    def bg_green(self, text: str = None) -> Hue:
-        """Resets the background color to green.
+    def bg_green(self, text: str = None) -> Colorant:
+        """Sets the background color to green.
 
         Parameters
         ----------
@@ -441,13 +452,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Background.GREEN, text)
 
-    def bg_yellow(self, text: str = None) -> Hue:
-        """Resets the background color to yellow.
+    def bg_yellow(self, text: str = None) -> Colorant:
+        """Sets the background color to yellow.
 
         Parameters
         ----------
@@ -456,13 +467,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Background.YELLOW, text)
 
-    def bg_blue(self, text: str = None) -> Hue:
-        """Resets the background color to blue.
+    def bg_blue(self, text: str = None) -> Colorant:
+        """Sets the background color to blue.
 
         Parameters
         ----------
@@ -471,13 +482,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Background.BLUE, text)
 
-    def bg_magenta(self, text: str = None) -> Hue:
-        """Resets the background color to magenta.
+    def bg_magenta(self, text: str = None) -> Colorant:
+        """Sets the background color to magenta.
 
         Parameters
         ----------
@@ -486,13 +497,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Background.MAGENTA, text)
 
-    def bg_cyan(self, text: str = None) -> Hue:
-        """Resets the background color to cyan.
+    def bg_cyan(self, text: str = None) -> Colorant:
+        """Sets the background color to cyan.
 
         Parameters
         ----------
@@ -501,13 +512,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Background.CYAN, text)
 
-    def bg_white(self, text: str = None) -> Hue:
-        """Resets the background color to white.
+    def bg_white(self, text: str = None) -> Colorant:
+        """Sets the background color to white.
 
         Parameters
         ----------
@@ -516,13 +527,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Background.WHITE, text)
 
-    def bg_lt_black(self, text: str = None) -> Hue:
-        """Resets the background color to light black.
+    def bg_lt_black(self, text: str = None) -> Colorant:
+        """Sets the background color to light black.
 
         Parameters
         ----------
@@ -531,13 +542,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Background.LT_BLACK, text)
 
-    def bg_lt_red(self, text: str = None) -> Hue:
-        """Resets the background color to light red.
+    def bg_lt_red(self, text: str = None) -> Colorant:
+        """Sets the background color to light red.
 
         Parameters
         ----------
@@ -546,13 +557,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Background.LT_RED, text)
 
-    def bg_lt_green(self, text: str = None) -> Hue:
-        """Resets the background color to light green.
+    def bg_lt_green(self, text: str = None) -> Colorant:
+        """Sets the background color to light green.
 
         Parameters
         ----------
@@ -561,13 +572,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Background.LT_GREEN, text)
 
-    def bg_lt_yellow(self, text: str = None) -> Hue:
-        """Resets the background color to light yellow.
+    def bg_lt_yellow(self, text: str = None) -> Colorant:
+        """Sets the background color to light yellow.
 
         Parameters
         ----------
@@ -576,13 +587,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Background.LT_YELLOW, text)
 
-    def bg_lt_blue(self, text: str = None) -> Hue:
-        """Resets the background color to light blue.
+    def bg_lt_blue(self, text: str = None) -> Colorant:
+        """Sets the background color to light blue.
 
         Parameters
         ----------
@@ -591,13 +602,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Background.LT_BLUE, text)
 
-    def bg_lt_magenta(self, text: str = None) -> Hue:
-        """Resets the background color to light magenta.
+    def bg_lt_magenta(self, text: str = None) -> Colorant:
+        """Sets the background color to light magenta.
 
         Parameters
         ----------
@@ -606,13 +617,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Background.LT_MAGENTA, text)
 
-    def bg_lt_cyan(self, text: str = None) -> Hue:
-        """Resets the background color to light cyan.
+    def bg_lt_cyan(self, text: str = None) -> Colorant:
+        """Sets the background color to light cyan.
 
         Parameters
         ----------
@@ -621,13 +632,13 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Background.LT_CYAN, text)
 
-    def bg_lt_white(self, text: str = None) -> Hue:
-        """Resets the background color to light white.
+    def bg_lt_white(self, text: str = None) -> Colorant:
+        """Sets the background color to light white.
 
         Parameters
         ----------
@@ -636,12 +647,12 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Background.LT_WHITE, text)
 
-    def bold(self, text: str = None) -> Hue:
+    def bold(self, text: str = None) -> Colorant:
         """Increases font intensity.
 
         Parameters
@@ -651,12 +662,12 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Decoration.BOLD, text)
 
-    def underline(self, text: str = None) -> Hue:
+    def underline(self, text: str = None) -> Colorant:
         """Adds the underline effect.
 
         Parameters
@@ -666,12 +677,12 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Decoration.UNDERLINE, text)
 
-    def reversed(self, text: str = None) -> Hue:
+    def reversed(self, text: str = None) -> Colorant:
         """Flips the foreground and background colors.
 
         Parameters
@@ -681,12 +692,12 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return self._add(Decoration.REVERSED, text)
 
-    def _add(self, *argv: str) -> Hue:
+    def _add(self, *argv: str) -> Colorant:
         """Adds escape sequences and texts to buffer.
 
         Parameters
@@ -696,7 +707,7 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         for arg in argv:
@@ -709,7 +720,7 @@ class Hue:
 
         Returns
         -------
-        Hue
+        Colorant
             Current instance.
         """
         return ''.join(self._buf)
