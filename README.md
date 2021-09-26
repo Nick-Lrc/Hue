@@ -4,6 +4,12 @@
 
 - Sets text colors and effects in console.
 
+## Installation
+
+```bash
+pip install colorant
+```
+
 ## Features
 
 - Foreground and background colors
@@ -27,6 +33,9 @@
   - Bold
   - Underline
   - Reversed
+- Function chaining
+  - e.g. `Colorant().bg_lt_green().black('OK').flush()` prints `OK` in black on a light green background.
+  - `tests/demo.py` contains more example usages.
 
 ![demo](https://raw.githubusercontent.com/Nick-Lrc/colorant/main/demo.png)
 
