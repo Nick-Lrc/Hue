@@ -1,4 +1,4 @@
-# Colorant
+# ![Colorant title](https://raw.githubusercontent.com/Nick-Lrc/colorant/main/colorant.png)
 
 ## Intro
 
